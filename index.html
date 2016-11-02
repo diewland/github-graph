@@ -29,8 +29,20 @@
             Summary by language
           </h2>
 
+          <!-- graph -->
+          <div id='chart-wrapper'>
+            <canvas id="myChart"></canvas>
+          </div>
+
           <!-- title + input text -->
           <br />
+          <p class="control has-addons has-addons-centered">
+            <input id='username' class="input" type="text" placeholder="Enter username" value='diewland'>
+            <a id='search' class="button is-info">
+              Search
+            </a>
+          </p>
+
           <p class="control has-addons has-addons-centered">
             <span class="select">
               <select id='git_type'>
@@ -38,20 +50,6 @@
                 <option value='starred'>starred</option>
               </select>
             </span>
-            <input id='username' class="input" type="text" placeholder="Enter username" value='diewland'>
-            <a id='search' class="button is-info">
-              Search
-            </a>
-          </p>
-          <br />
-
-          <!-- graph -->
-          <div id='chart-wrapper'>
-            <canvas id="myChart"></canvas>
-          </div>
-
-          <br />
-          <p class="control has-addons has-addons-centered">
             <span class="select">
               <select id='graph_type'>
                 <option value='line'>line</option>

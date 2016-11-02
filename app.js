@@ -52,6 +52,10 @@ function draw_graph(type, data){
                 backgroundColor: colors,
             }]
         },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+        },
     });
   }
 }
@@ -108,6 +112,11 @@ $('#username').keypress(function(e) {
   if(e.which == 13) {
     $('#search').click();
   }
+});
+
+// bind git type
+$('#git_type').change(function(){
+  $('#search').click();
 });
 
 // bind graph type
