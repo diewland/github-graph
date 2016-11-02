@@ -30,9 +30,10 @@
           </h2>
 
           <!-- title + input text -->
+          <br />
           <p class="control has-addons has-addons-centered">
             <span class="select">
-              <select id='type'>
+              <select id='git_type'>
                 <option value='repos'>repos</option>
                 <option value='starred'>starred</option>
               </select>
@@ -48,6 +49,20 @@
           <div id='chart-wrapper'>
             <canvas id="myChart"></canvas>
           </div>
+
+          <br />
+          <p class="control has-addons has-addons-centered">
+            <span class="select">
+              <select id='graph_type'>
+                <option value='line'>line</option>
+                <option value='bar'>bar</option>
+                <option value='radar'>radar</option>
+                <option value='polarArea'>polar</option>
+                <option value='pie'>pie</option>
+                <option value='doughnut'>doughnut</option>
+              </select>
+            </span>
+          </p>
 
         </div>
       </div>

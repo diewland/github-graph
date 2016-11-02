@@ -1,14 +1,12 @@
 var all_items = null;
-var counts    = null;
-var keys      = null;
-var values    = null;
+var chart     = null;
 
 // http://stackoverflow.com/questions/1484506/random-color-generator-in-javascript
 function random_color(){
   return '#'+Math.floor(Math.random()*16777215).toString(16);
 }
 
-function draw_graph(data){
+function draw_graph(type, data){
   // prepare data
   counts = {};
   data.map(function(o){
@@ -16,10 +14,10 @@ function draw_graph(data){
   }).forEach(function(k){
     counts[k] = (counts[k]||0)+1;
   });
-  // keys   = Object.keys(counts);   --- not work on android chrome
-  // values = Object.values(counts); --- not work on android chrome
-  keys   = [];
-  values = [];
+  // var keys   = Object.keys(counts);   --- not work on android chrome
+  // var values = Object.values(counts); --- not work on android chrome
+  var keys   = [];
+  var values = [];
   $.each(counts, function(k, v){
     keys.push(k);
     values.push(v);
@@ -30,10 +28,13 @@ function draw_graph(data){
   keys.forEach(function(){
     colors.push(random_color());
   });
-  colors = colors[0]; // TODO for line graph
+  if(['line', 'radar'].indexOf(type) != -1){
+    colors = colors[0];
+  }
 
   // draw graph
   if(window.chart){
+    chart.config.type = type;
     chart.data.labels = keys;
     chart.data.datasets[0].data = values;
     chart.data.datasets[0].backgroundColor = colors;
@@ -42,7 +43,7 @@ function draw_graph(data){
   else {
     var ctx = document.getElementById("myChart");
     window.chart = new Chart(ctx, {
-        type: 'line',
+        type: type,
         data: {
             labels: keys,
             datasets: [{
@@ -56,33 +57,34 @@ function draw_graph(data){
 }
 
 // after fetch process
-function do_when_fetch_done(username, type, data){
-  sessionStorage.setItem(type+'_'+username, JSON.stringify(data));
-  draw_graph(data);
+function do_when_fetch_done(username, git_type, graph_type, data){
+  sessionStorage.setItem(git_type+'_'+username, JSON.stringify(data));
+  draw_graph(graph_type, data);
   $('#search').removeClass('is-loading');
 }
 
 // fetch data from github api or use cache
-function fetch_data(username, type, page_no){
-  var cache_items = sessionStorage.getItem(type+'_'+username) || null;
+function fetch_data(username, git_type, graph_type, page_no){
+  var cache_items = sessionStorage.getItem(git_type+'_'+username) || null;
+  var graph_type  = graph_type || 'line';
   if(cache_items){
     cache_items = JSON.parse(cache_items);
-    console.log('<'+ username +'|'+ type +'> use cache data {'+ cache_items.length +'}');
-    do_when_fetch_done(username, type, cache_items);
+    console.log('<'+ username +'|'+ git_type +'> use cache data {'+ cache_items.length +'}');
+    do_when_fetch_done(username, git_type, graph_type, cache_items);
   }
   else {
     var page_no = page_no || 1;
     $.ajax({
-      url: 'https://api.github.com/users/'+ username +'/'+ type +'?page='+ page_no,
+      url: 'https://api.github.com/users/'+ username +'/'+ git_type +'?page='+ page_no,
       success: function(items){
         if(items.length > 0){
-          console.log('<'+ username +'|'+ type +'> fetching page '+ page_no +'.. {'+ items.length +'}');
+          console.log('<'+ username +'|'+ git_type +'> fetching page '+ page_no +'.. {'+ items.length +'}');
           all_items = all_items.concat(items);
-          fetch_data(username, type, page_no+1);
+          fetch_data(username, git_type, graph_type, page_no+1);
         }
         else {
-          console.log('<'+ username +'|'+ type +'> fetch done');
-          do_when_fetch_done(username, type, all_items);
+          console.log('<'+ username +'|'+ git_type +'> fetch done');
+          do_when_fetch_done(username, git_type, graph_type, all_items);
         }
       },
       error: function(a, b, c){
@@ -98,12 +100,21 @@ function fetch_data(username, type, page_no){
 $('#search').click(function(){
   all_items = [];
   $('#search').addClass('is-loading');
-  fetch_data($('#username').val(), $('#type').val());
+  fetch_data($('#username').val(),
+             $('#git_type').val(),
+             $('#graph_type').val());
 });
 $('#username').keypress(function(e) {
   if(e.which == 13) {
     $('#search').click();
   }
+});
+
+// bind graph type
+$('#graph_type').change(function(){
+  window.chart.destroy();
+  window.chart = null;
+  $('#search').click();
 });
 
 // when start, draw diewland graph
