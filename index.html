@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Drawing graph from your GitHub data.">
+    <title>GitHub Graph</title>
+
+    <!-- external libs -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.2.3/css/bulma.min.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js'></script>
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+  <body>
+
+    <section class="hero is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <h1 class="title">
+            GitHub Graph
+          </h1>
+          <h2 class="subtitle">
+            Summary by language
+          </h2>
+
+          <!-- title + input text -->
+          <p class="control has-addons has-addons-centered">
+            <span class="select">
+              <select id='type'>
+                <option value='repos'>repos</option>
+                <option value='starred'>starred</option>
+              </select>
+            </span>
+            <input id='username' class="input" type="text" placeholder="Enter username" value='diewland'>
+            <a id='search' class="button is-info">
+              Search
+            </a>
+          </p>
+          <br />
+
+          <!-- graph -->
+          <div id='chart-wrapper'>
+            <canvas id="myChart"></canvas>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- execute app -->
+    <script src='./app.js'></script>
+
+  </body>
+</html>
