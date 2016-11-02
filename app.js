@@ -41,8 +41,7 @@ function draw_graph(type, data){
     chart.update();
   }
   else {
-    var ctx = document.getElementById("myChart");
-    window.chart = new Chart(ctx, {
+    var config = {
         type: type,
         data: {
             labels: keys,
@@ -56,7 +55,16 @@ function draw_graph(type, data){
           responsive: true,
           maintainAspectRatio: false,
         },
-    });
+    };
+
+    // line and bar graph start from zero
+    if(['line', 'bar'].indexOf(type) != -1){
+      config.options.scales = { yAxes: [{ ticks: { beginAtZero: true } }] };
+    }
+
+    // generate new chart
+    var ctx = document.getElementById("myChart");
+    window.chart = new Chart(ctx, config);
   }
 }
 
